@@ -4,6 +4,16 @@ This is library for working with physics measures.'''
 
 import math
 
+def isfloat(string):
+    if string.count('.') == 1:
+        if (string[:string.find('.')] + string[string.find('.') + 1:]).isnumeric():
+            return True
+        else:
+            return False
+    elif string.isnumeric():
+        return True
+    return False
+
 class PhysicsError(Exception):
     def __init__(self, text):
         self.txt = text
@@ -21,37 +31,87 @@ class Measure:
 
     def __init__(self, *args, **kwargs):
         if len(args) + len(kwargs) <= 4:
-            # TODO str var
-            if type(args[0]) == str:
+            if len(args) != 0 and type(args[0]) == Measure:
                 if len(args) + len(kwargs) == 1:
-                    pass
+                    self.data = args[0].data
+                    self.value = args[0].value
+            elif len(args) != 0 and type(args[0]) == str:
+                if len(args) + len(kwargs) == 1:
+                    string = args[0].split()
+                    if isfloat(string[0]):
+                        num = float(string[0])
+                    else:
+                        num = 1
+                    kg = m = s = 0
+                    for i in range(1, len(string)):
+                        string[i] = string[i].split()
+                        if len(string[i]) == 2:
+                            if isfloat(string[i][1]):
+                                if string[i][0] == 'kg':
+                                    kg += float(string[i][1])
+                                elif string[i][0] == 'm':
+                                    m += float(string[i][1])
+                                elif string[i][0] == 's':
+                                    s += float(string[i][1])
+                                else:
+                                    raise AttributeError('Indefinite argument ' + string[i][0])
+                            else:
+                                raise AttributeError('Degree of value must be int or float, not ' + str(type(string[i][1])))
+                        elif len(string[i]) == 1:
+                            if string[i][0] == 'kg':
+                                kg += 1
+                            elif string[i][0] == 'm':
+                                m += 1
+                            elif string[i][0] == 's':
+                                s += 1
+                            else:
+                                raise AttributeError('Indefinite argument ' + string[i][0])
+                        else:
+                            raise AttributeError("inadmissible argument " + string[i])
+                    self.data = [num, kg, m, s]
                 else:
-                    raise AttributeError('To many arguments')
+                    raise AttributeError('Too many arguments')
             else:
-                try:
-                    num = kwargs['num']
-                except KeyError:
-                    num = args[0]
-                except IndexError:
-                    num = 1
-                try:
-                    kg = kwargs['kg']
-                except KeyError:
-                    kg = args[1]
-                except IndexError:
-                    kg = 0
-                try:
-                    m = kwargs['m']
-                except KeyError:
-                    m = args[2]
-                except IndexError:
-                    m = 0
-                try:
-                    s = kwargs['s']
-                except KeyError:
-                    s = args[3]
-                except IndexError:
-                    s = 0
+                if len(args) != 0:
+                    if 'num' in kwargs.keys():
+                        raise AttributeError('Double definition of num')
+                    else:
+                        num = args[0]
+                else:
+                    if 'num' in kwargs.keys():
+                        num = kwargs['num']
+                    else:
+                        num = 1
+                if len(args) > 1:
+                    if 'kg' in kwargs.keys():
+                        raise AttributeError('Double definition of kg')
+                    else:
+                        kg = args[1]
+                else:
+                    if 'kg' in kwargs.keys():
+                        kg = kwargs['kg']
+                    else:
+                        kg = 0
+                if len(args) > 2:
+                    if 'm' in kwargs.keys():
+                        raise AttributeError('Double definition of m')
+                    else:
+                        m = args[2]
+                else:
+                    if 'm' in kwargs.keys():
+                        m = kwargs['m']
+                    else:
+                        m = 0
+                if len(args) > 3:
+                    if 's' in kwargs.keys():
+                        raise AttributeError('Double definition of s')
+                    else:
+                        s = args[3]
+                else:
+                    if 's' in kwargs.keys():
+                        s = kwargs['s']
+                    else:
+                        s = 0
                 if sum([(type(i) == int or type(i) == float) for i in [num, kg, m, s]]) == 4:
                     self.data = [num, kg, m, s]
                     self.value = 'basic'
@@ -185,11 +245,15 @@ class Measure:
         return float(self.data[0])
     
     def __str__(self):
-        return (str(float(self) / (len(int(self)) ** 10)) +
-                ' * ' + str(len(int(self)) ** 10) +
-                ' kg^' + str(self.data[1]) +
-                ' m^' + str(self.data[2]) +
-                ' s^' + str(self.data[3]))
+        output = ''
+        output += str(float(self) / (10 ** (len(str(int(self))) - 1)) + ' * 10^' + str(len(str(int(self))) - 1) + ' '
+        if self.data[1] != 0:
+            output += 'kg^' + str(self.data[1]) + ' '
+        if self.data[2] != 0:
+            output += 'm^' + str(self.data[2]) + ' '
+        if self.data[3] != 0:
+            output += 's^' + str(self.data[3])
+        return output
     
     def __repr__(self):
         return ('Measure(num=' + str(float(self)) +
@@ -206,4 +270,4 @@ class Measure:
         for obj in self.data:
             yield obj
 
-print(Measure(1, 2, m=2, s=3)
+print(Measure(1, 2, m=2, s=3))
