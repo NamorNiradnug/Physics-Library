@@ -44,7 +44,7 @@ class Measure:
                         num = 1
                     kg = m = s = 0
                     for i in range(1, len(string)):
-                        string[i] = string[i].split()
+                        string[i] = string[i].split('^')
                         if len(string[i]) == 2:
                             if isfloat(string[i][1]):
                                 if string[i][0] == 'kg':
@@ -246,7 +246,7 @@ class Measure:
     
     def __str__(self):
         output = ''
-        output += str(float(self) / (10 ** (len(str(int(self))) - 1)) + ' * 10^' + str(len(str(int(self))) - 1) + ' '
+        output += str(float(self) / (10 ** (len(str(int(self))) - 1))) + ' * 10^' + str(len(str(int(self))) - 1) + ' '
         if self.data[1] != 0:
             output += 'kg^' + str(self.data[1]) + ' '
         if self.data[2] != 0:
@@ -271,3 +271,4 @@ class Measure:
             yield obj
 
 print(Measure(1, 2, m=2, s=3))
+print(Measure('1.2 kg^1'))
