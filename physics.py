@@ -4,7 +4,7 @@ This is library for working with physics measures.'''
 
 import math
 
-class PhisicsError(Exception):
+class PhysicsError(Exception):
     def __init__(self, text):
         self.txt = text
         print(self)
@@ -19,15 +19,49 @@ class Measure:
     '''Measure object is number with three dimensions: 
     mass in kilograms, length in meters, time in seconds.'''
 
-    def __init__(self, num=1, kg=0, m=0, s=0):
-        if type(num) == int or type(num) == float:
-            self.data = [num, kg, m, s]
-        elif type(num) == Measure:
-            self.data = num.data
+    def __init__(self, *args, **kwargs):
+        if len(args) + len(kwargs) <= 4:
+            # TODO str var
+            if type(args[0]) == str:
+                if len(args) + len(kwargs) == 1:
+                    pass
+                else:
+                    raise AttributeError('To many arguments')
+            else:
+                try:
+                    num = kwargs['num']
+                except KeyError:
+                    num = args[0]
+                except IndexError:
+                    num = 1
+                try:
+                    kg = kwargs['kg']
+                except KeyError:
+                    kg = args[1]
+                except IndexError:
+                    kg = 0
+                try:
+                    m = kwargs['m']
+                except KeyError:
+                    m = args[2]
+                except IndexError:
+                    m = 0
+                try:
+                    s = kwargs['s']
+                except KeyError:
+                    s = args[3]
+                except IndexError:
+                    s = 0
+                if sum([(type(i) == int or type(i) == float) for i in [num, kg, m, s]]) == 4:
+                    self.data = [num, kg, m, s]
+                    self.value = 'basic'
+                else:
+                    raise PhysicsError('Arguments of physics measure must be float or int')
         else:
-            raise PhisicsError('\'' + num + '\' can\'t be physics measure')
+            raise AttributeError('Too many arguments')
+            
 
-    def get_value(self):
+    def get_basic_value(self):
         return self.data[1:]
 
     def get_num(self):
@@ -35,7 +69,7 @@ class Measure:
 
     def __cmp__(self, other): 
         other = Measure(other)
-        if self.get_value() == other.get_value():
+        if self.get_basic_value() == other.get_basic_value():
             return self.get_num() - other.get_num()
         raise DimensionError('Sum of different dimension')
 
@@ -60,7 +94,7 @@ class Measure:
 
     def __add__(self, other):
         other = Measure(other)
-        if self.get_value() == other.get_value():
+        if self.get_basic_value() == other.get_basic_value():
             return Measure(num=self.data[0] + other.data[0], kg=self.data[1],
                             m=self.data[2], s=self.data[3])
         raise DimensionError('Sum of different dimension numbers')
@@ -91,7 +125,7 @@ class Measure:
 
     def __mod__(self, other):
         other = Measure(other)
-        if other.get_value() == self.get_value():
+        if other.get_basic_value() == self.get_basic_value():
             return Measure(num=self.data[0] % other.data[0], kg=self.data[1],
                             m=self.data[2], s=self.data[3])
         raise DimensionError('Mod of different dimension physics measures')
@@ -171,3 +205,5 @@ class Measure:
     def __iter__(self):
         for obj in self.data:
             yield obj
+
+print(Measure(1, 2, m=2, s=3)
