@@ -1,2 +1,5 @@
 # IntelleJ .idea
-.idea/*
+.idea/
+
+# pycache
+__pycache__/

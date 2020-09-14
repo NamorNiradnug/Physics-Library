@@ -3,7 +3,7 @@ import unittest
 import dimension
 import unit
 import physical
-from physical import Vector
+from vector import Vector
 
 
 class TestCore(unittest.TestCase):
@@ -19,8 +19,8 @@ class TestCore(unittest.TestCase):
         self.assertEqual(dim ** 0.5, dimension.PRESSURE ** 2)
 
     def test_unit(self):
-        self.assertEqual(unit.HEWTON / unit.KILOGRAM, unit.Unit(1, dimension.ACCELERATION))
-        self.assertEqual(unit.PASCAL * unit.METER ** 2, unit.HEWTON)
+        self.assertEqual(unit.NEWTON / unit.KILOGRAM, unit.Unit(1, dimension.ACCELERATION))
+        self.assertEqual(unit.PASCAL * unit.METER ** 2, unit.NEWTON)
 
     def test_vector(self):
         a = Vector(1, 1)
@@ -36,23 +36,17 @@ class TestCore(unittest.TestCase):
         v0 = physical.Physical(2, unit.METER / unit.SECOND)
         t = physical.Physical(3, unit.SECOND)
         m1 = physical.Physical(3, unit.KILOGRAM)
-        f1 = physical.Physical(6, unit.HEWTON)
-        f2 = physical.Physical(3, unit.HEWTON)
+        f1 = physical.Physical(6, unit.NEWTON)
+        f2 = physical.Physical(3, unit.NEWTON)
         self.assertEqual(f2 - f1, -f2)
         self.assertEqual(a1 * m1, f1)
         self.assertNotEqual(f2, f1)
         with self.assertRaises(AttributeError):
             f1 + a1
         self.assertEqual(f2 + f2, f1)
-        self.assertEqual(
-            t * v0 + (g * t ** 2) / 2,
-            physical.Physical(-39, unit.METER),
-        )
+        self.assertEqual(t * v0 + (g * t ** 2) / 2, physical.Physical(-39, unit.METER))
         g /= physical.Physical(2, unit.ONE)
-        self.assertEqual(
-            t * v0 + (g * t ** 2) / 2.0,
-            physical.Physical(-16.5, unit.METER),
-        )
+        self.assertEqual(t * v0 + (g * t ** 2) / 2.0, physical.Physical(-16.5, unit.METER))
 
     def test_vector_physical(self):
         g = physical.VectorPhysical(Vector(0, -10), unit.METER / unit.SECOND ** 2)

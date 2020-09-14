@@ -51,6 +51,6 @@ AMPER = Unit(1, dimension.AMPERAGE)
 KELVIN = Unit(1, dimension.TEMPERATURE)
 
 # Derived SI units
-HEWTON = Unit(1, dimension.FORCE)
+NEWTON = Unit(1, dimension.FORCE)
 PASCAL = Unit(1, dimension.PRESSURE)
 JOULE = Unit(1, dimension.WORK)
