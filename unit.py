@@ -1,50 +1,45 @@
 """Unit class and unit constants."""
 
-
 import dimension
 
 
 class Unit:
     """Unit of measurement."""
 
-    def __init__(
-            self,
-            coefficient: float = 1,
-            dim: dimension.Dimension = dimension.SCALAR
-    ):
+    def __init__(self, coefficient: float = 1, dim: dimension.Dimension = dimension.SCALAR):
         self.coefficient = coefficient
-        self.dim = dim
+        self.dimension = dim.copy()
 
     def __mul__(self, other):
-        return Unit(self.coefficient * other.coefficient, self.dim * other.dim)
+        return Unit(self.coefficient * other.coefficient, self.dimension * other.dimension)
 
     def __imul__(self, other):
         self.coefficient *= other.coefficient
-        self.dim *= other.dim
+        self.dimension *= other.dimension
         return self
 
     def __truediv__(self, other):
-        return Unit(self.coefficient / other.coefficient, self.dim / other.dim)
+        return Unit(self.coefficient / other.coefficient, self.dimension / other.dimension)
 
     def __itruediv__(self, other):
         self.coefficient /= other.coefficient
-        self.dim /= other.dim
+        self.dimension /= other.dimension
         return self
 
     def __pow__(self, power):
-        return Unit(self.coefficient ** power, self.dim ** power)
+        return Unit(self.coefficient ** power, self.dimension ** power)
 
     def __ipow__(self, power):
         self.coefficient **= power
-        self.dim **= power
+        self.dimension **= power
         return self
 
     def __eq__(self, other):
-        return self.coefficient == self.coefficient and self.dim == other.dim
+        return self.coefficient == self.coefficient and self.dimension == other.dimension
 
     def copy(self):
-        """Copy of object."""
-        return Unit(self.coefficient, self.dim)
+        """Copy object."""
+        return Unit(self.coefficient, self.dimension)
 
 
 # Base SI units

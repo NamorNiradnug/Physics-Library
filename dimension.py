@@ -5,25 +5,17 @@ class Dimension:
     """Physics dimension."""
 
     def __init__(
-            self,
-            length: int = 0,
-            time: int = 0,
-            mass: int = 0,
-            amperage: int = 0,
-            temperature: int = 0
+        self,
+        length: int = 0,
+        time: int = 0,
+        mass: int = 0,
+        amperage: int = 0,
+        temperature: int = 0,
     ):
-        self.data = [
-            length,
-            time,
-            mass,
-            amperage,
-            temperature
-        ]
+        self.data = [length, time, mass, amperage, temperature]
 
     def __mul__(self, other):
-        return Dimension(
-            *(self.data[i] + other.data[i] for i in range(5))
-        )
+        return Dimension(*(self.data[i] + other.data[i] for i in range(5)))
 
     def __imul__(self, other):
         for i in range(5):
@@ -31,9 +23,7 @@ class Dimension:
         return self
 
     def __truediv__(self, other):
-        return Dimension(
-            *(self.data[i] - other.data[i] for i in range(5))
-        )
+        return Dimension(*(self.data[i] - other.data[i] for i in range(5)))
 
     def __itruediv__(self, other):
         for i in range(5):
@@ -41,9 +31,7 @@ class Dimension:
         return self
 
     def __pow__(self, power):
-        return Dimension(
-            *(self.data[i] * power for i in range(5))
-        )
+        return Dimension(*(self.data[i] * power for i in range(5)))
 
     def __ipow__(self, power):
         for i in range(5):
@@ -54,7 +42,7 @@ class Dimension:
         return self.data == other.data
 
     def copy(self):
-        """Copy of object."""
+        """Copy object."""
         return Dimension(*self.data)
 
 
@@ -69,6 +57,7 @@ TEMPERATURE = Dimension(temperature=1)
 # Derived dimensions
 SQUARE = LENGTH ** 2
 VOLUME = LENGTH ** 3
+DENSITY = MASS / VOLUME
 VELOCITY = LENGTH / TIME
 ACCELERATION = VELOCITY / TIME
 FORCE = MASS * ACCELERATION
