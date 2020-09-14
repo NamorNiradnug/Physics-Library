@@ -10,23 +10,36 @@ def unit_convert(func):
     return wrapper
 
 
+def convert_float(func):
+    def wrapper(self, other):
+        if type(other) in (int, float):
+            other = ScalarPhysical(other)
+        return func(self, other)
+
+    return wrapper
+
+
 class ScalarPhysical:
     def __init__(self, value: float = 0, unit: Unit = ONE):
         self.value = value
         self.unit = unit.copy()
 
+    @convert_float
     @unit_convert
     def __add__(self, other):
         return ScalarPhysical(self.value + other.value, self.unit)
 
+    @convert_float
     @unit_convert
     def __iadd__(self, other):
         self.value += other.value
         return self
 
+    @convert_float
     def __mul__(self, other):
         return ScalarPhysical(self.value * other.value, self.unit * other.unit)
 
+    @convert_float
     def __imul__(self, other):
         self.value *= other.value
         self.unit *= other.unit
@@ -34,18 +47,22 @@ class ScalarPhysical:
     def __neg__(self):
         return ScalarPhysical(-self.value, self.unit)
 
+    @convert_float
     @unit_convert
     def __sub__(self, other):
         return ScalarPhysical(self.value - other.value, self.unit)
 
+    @convert_float
     @unit_convert
     def __isub__(self, other):
         self.value -= other.value
         return self
 
+    @convert_float
     def __truediv__(self, other):
         return ScalarPhysical(self.value / other.value, self.unit / other.unit)
 
+    @convert_float
     def __itruediv__(self, other):
         self.value /= other.value
         self.unit /= other.unit
@@ -58,6 +75,7 @@ class ScalarPhysical:
         self.value **= power
         self.unit **= power
 
+    @convert_float
     @unit_convert
     def __eq__(self, other):
         return self.value == other.value
@@ -152,14 +170,17 @@ class VectorPhysical:
         self.value += other.value
         return self
 
+    @convert_float
     def __mul__(self, other: ScalarPhysical):
         return VectorPhysical(self.value * other.value, self.unit * other.unit)
 
+    @convert_float
     def __imul__(self, other: ScalarPhysical):
         self.value *= other.value
         self.unit *= other.unit
         return self
 
+    @convert_float
     def __rmul__(self, other: ScalarPhysical):
         return self * other
 
@@ -175,9 +196,11 @@ class VectorPhysical:
         self.value -= other.value
         return self
 
+    @convert_float
     def __truediv__(self, other):
         return VectorPhysical(self.value / other.value, self.unit / other.unit)
 
+    @convert_float
     def __itruediv__(self, other):
         self.value /= other.value
         self.unit /= other.unit
