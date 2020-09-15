@@ -29,6 +29,8 @@ class TestCore(unittest.TestCase):
         self.assertEqual(a - b * 2, c)
         self.assertEqual(c.length(), 0.5)
         self.assertEqual(a.length(), 2 ** 0.5)
+        self.assertEqual(a.cross(c), 0.5)
+        self.assertEqual(a.angle_cos(Vector(0, -1)), -1 / 2 ** 0.5)
 
     def test_physical(self):
         a1 = physical.Physical(2, unit.METER / unit.SECOND ** 2)
@@ -42,7 +44,7 @@ class TestCore(unittest.TestCase):
         self.assertEqual(a1 * m1, f1)
         self.assertNotEqual(f2, f1)
         with self.assertRaises(AttributeError):
-            f1 + a1
+            var = f1 + a1
         self.assertEqual(f2 + f2, f1)
         self.assertEqual(t * v0 + (g * t ** 2) / 2, physical.Physical(-39, unit.METER))
         g /= physical.Physical(2, unit.ONE)

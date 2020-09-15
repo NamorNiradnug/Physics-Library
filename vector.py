@@ -1,3 +1,6 @@
+from math import acos
+
+
 class Vector:
     """3D Vector. Could be use as 2D."""
 
@@ -65,3 +68,12 @@ class Vector:
 
     def z_vector(self):
         return Vector(0, 0, self.data[2])
+
+    def cross(self, other) -> float:
+        return sum(self.data[i] * other.data[i] for i in range(3))
+
+    def angle_cos(self, other) -> float:
+        return self.cross(other) / (self.length() * other.length())
+
+    def angle(self, other) -> float:
+        return acos(self.angle(other))
