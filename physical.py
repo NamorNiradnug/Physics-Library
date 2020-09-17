@@ -1,6 +1,6 @@
 """Main classes of PyPhysics - Physical and VectorPhysical"""
 
-from unit import Unit, ONE
+import unit
 from vector import Vector
 
 
@@ -21,9 +21,9 @@ def convert_float(func):
 
 
 class ScalarPhysical:
-    def __init__(self, value: float = 0, unit: Unit = ONE):
+    def __init__(self, value: float = 0, unit_: unit.Unit = unit.ONE):
         self.value = value
-        self.unit = unit.copy()
+        self.unit = unit_.copy()
 
     @convert_float
     @unit_convert
@@ -87,19 +87,19 @@ class ScalarPhysical:
     def __eq__(self, other):
         return self.value == other.value
 
-    def to_unit(self, unit: Unit):
+    def to_unit(self, unit_: unit.Unit):
         if self.unit.dimension != unit.dimension:
             raise AttributeError("Bad unit dimension.")
-        return ScalarPhysical(self.value * self.unit.coefficient / unit.coefficient, unit)
+        return ScalarPhysical(self.value * self.unit.coefficient / unit_.coefficient, unit_)
 
     def copy(self):
         return ScalarPhysical(self.value, self.unit)
 
 
 class VectorPhysical:
-    def __init__(self, value: Vector = Vector(), unit: Unit = ONE):
+    def __init__(self, value: Vector = Vector(), unit_: unit.Unit = unit.ONE):
         self.value = value
-        self.unit = unit
+        self.unit = unit_
 
     @unit_convert
     def __add__(self, other):
@@ -150,10 +150,10 @@ class VectorPhysical:
     def __eq__(self, other):
         return self.value == other.value
 
-    def to_unit(self, unit: Unit):
+    def to_unit(self, unit_: unit.Unit):
         if self.unit.dimension != unit.dimension:
             raise AttributeError("Bad unit dimension.")
-        return VectorPhysical(self.value * self.unit.coefficient / unit.coefficient, unit)
+        return VectorPhysical(self.value * self.unit.coefficient / unit_.coefficient, unit_)
 
     def to_scalar(self) -> ScalarPhysical:
         return ScalarPhysical(self.value.length(), self.unit)
@@ -178,3 +178,11 @@ class VectorPhysical:
 
 
 Physical = ScalarPhysical
+
+
+# constants
+# gravity constant
+G = Physical(6.6743, unit.Unit(10 ** -11) * unit.METER ** 3 * unit.KILOGRAM ** -1 * unit.SECOND ** -2)
+
+# gravity accelerations
+EARTH_GRAVITY = VectorPhysical(Vector(0, 9.81), unit.METER * unit.SECOND ** -2)
