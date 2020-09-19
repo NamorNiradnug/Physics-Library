@@ -1,10 +1,14 @@
 """Main classes of PyPhysics - Physical and VectorPhysical"""
 
+from types import FunctionType
+
 import unit
 from vector import Vector
 
 
-def unit_convert(func):
+def unit_convert(func: FunctionType):
+    """Decorator for Physical's methods.
+    Converts second argument ('other') to 'other.to_unit(self.unit)'"""
     def wrapper(self, other):
         return func(self, other.to_unit(self.unit))
 
@@ -12,6 +16,8 @@ def unit_convert(func):
 
 
 def convert_float(func):
+    """Decorator for Physical's methods.
+    If second argument ('other') is float or integer, converts it to ScalarPhysical."""
     def wrapper(self, other):
         if type(other) in (int, float):
             other = ScalarPhysical(other)
@@ -21,9 +27,13 @@ def convert_float(func):
 
 
 class ScalarPhysical:
+    """Scalar physical quantity, like mass value or distance length."""
     def __init__(self, value: float = 0, unit_: unit.Unit = unit.ONE):
         self.value = value
         self.unit = unit_.copy()
+
+    def __repr__(self):
+        return f"ScalarPhysical({self.value}, {repr(self.unit)})"
 
     @convert_float
     @unit_convert
@@ -88,7 +98,8 @@ class ScalarPhysical:
         return self.value == other.value
 
     def to_unit(self, unit_: unit.Unit):
-        if self.unit.dimension != unit.dimension:
+        """Equal physical quantity with new unit."""
+        if self.unit.dimension != unit_.dimension:
             raise AttributeError("Bad unit dimension.")
         return ScalarPhysical(self.value * self.unit.coefficient / unit_.coefficient, unit_)
 
@@ -97,9 +108,13 @@ class ScalarPhysical:
 
 
 class VectorPhysical:
+    """Vector physical quantity, like velocity or force."""
     def __init__(self, value: Vector = Vector(), unit_: unit.Unit = unit.ONE):
         self.value = value
         self.unit = unit_
+
+    def __repr__(self):
+        return f"VectorPhysical({self.value}, {repr(self.unit)})"
 
     @unit_convert
     def __add__(self, other):
@@ -151,11 +166,13 @@ class VectorPhysical:
         return self.value == other.value
 
     def to_unit(self, unit_: unit.Unit):
-        if self.unit.dimension != unit.dimension:
+        """Equal physical quantity with new unit."""
+        if self.unit.dimension != unit_.dimension:
             raise AttributeError("Bad unit dimension.")
         return VectorPhysical(self.value * self.unit.coefficient / unit_.coefficient, unit_)
 
     def to_scalar(self) -> ScalarPhysical:
+        """ScalarPhysical with value equal to the length of self.value and the same unit."""
         return ScalarPhysical(self.value.length(), self.unit)
 
     def x(self) -> ScalarPhysical:
@@ -181,8 +198,7 @@ Physical = ScalarPhysical
 
 
 # constants
-# gravity constant
-G = Physical(6.6743, unit.Unit(10 ** -11) * unit.METER ** 3 * unit.KILOGRAM ** -1 * unit.SECOND ** -2)
-
-# gravity accelerations
+G = Physical(6.6743, unit.Unit(1e-11) * unit.METER ** 3 * unit.KILOGRAM ** -1 * unit.SECOND ** -2)
+"""Gravity constant."""
 EARTH_GRAVITY = VectorPhysical(Vector(0, 9.81), unit.METER * unit.SECOND ** -2)
+"""Earth gravity acceleration."""

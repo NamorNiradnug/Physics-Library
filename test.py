@@ -8,7 +8,7 @@ from vector import Vector
 
 class TestCore(unittest.TestCase):
     def test_dimension(self):
-        self.assertEqual(dimension.WORK, dimension.Dimension(2, -2, 1))
+        self.assertEqual(dimension.WORK, dimension.Dimension(2, 1, -2))
         self.assertEqual(dimension.PRESSURE * dimension.SQUARE, dimension.FORCE)
         self.assertEqual(dimension.ACCELERATION * dimension.TIME ** 2, dimension.LENGTH)
         self.assertEqual(dimension.MASS / dimension.VOLUME, dimension.Dimension(length=-3, mass=1))

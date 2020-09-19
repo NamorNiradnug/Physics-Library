@@ -1,6 +1,7 @@
 """Unit class and unit constants."""
 
 import dimension
+from formating import superscripted
 
 
 class Unit:
@@ -9,6 +10,25 @@ class Unit:
     def __init__(self, coefficient: float = 1, dim: dimension.Dimension = dimension.SCALAR):
         self.coefficient = coefficient
         self.dimension = dim.copy()
+
+    def __repr__(self):
+        return f"Unit({self.coefficient}, {repr(self.dimension)}"
+
+    def __str__(self):
+        string = ""
+        if self.coefficient == -1:
+            string += "-"
+        elif self.coefficient != 1:
+            string += str(self.coefficient) + " "
+        base_units = ["m", "kg", "s", "A", "K"]
+        for i in range(5):
+            if self.dimension.data[i] == 0:
+                continue
+            string += base_units[i]
+            if self.dimension.data[i] != 1:
+                string += superscripted(self.dimension.data[i])
+            string += " " if i != 4 else ""
+        return string if string else "scalar_unit"
 
     def __mul__(self, other):
         return Unit(self.coefficient * other.coefficient, self.dimension * other.dimension)
@@ -38,7 +58,7 @@ class Unit:
         return self.coefficient == self.coefficient and self.dimension == other.dimension
 
     def copy(self):
-        """Copy object."""
+        """Unit copy."""
         return Unit(self.coefficient, self.dimension)
 
 

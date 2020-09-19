@@ -1,7 +1,9 @@
 from typing import Optional, List
 
+import unit
+
 from physical import Physical, VectorPhysical, EARTH_GRAVITY
-import dimension
+from vector import Vector
 
 
 class PhysicsBody:
@@ -21,6 +23,7 @@ class PhysicsBody:
         self.forces: List[VectorPhysical] = []
 
     def density(self) -> Optional[Physical]:
+        """Density of body, if its mass and volume are defined."""
         if self.mass is None or self.volume is None:
             return None
         return self.mass / self.volume
@@ -29,7 +32,16 @@ class PhysicsBody:
         self.forces.append(force)
 
     def force_sum(self) -> VectorPhysical:
-        forces_sum = sum(force for force in self.forces)
+        forces_sum = VectorPhysical(Vector(), unit.NEWTON)
         if self.mass is not None:
             forces_sum += self.mass * self.gravity_acceleration
         return forces_sum
+
+    def acceleration(self) -> Optional[VectorPhysical]:
+        """Acceleration of body, if it is possible to calculate."""
+        force_sum = self.force_sum()
+        if self.mass is None or self.mass.value == 0:
+            if force_sum.value == Vector():
+                return self.gravity_acceleration
+            return None
+        return force_sum / self.mass

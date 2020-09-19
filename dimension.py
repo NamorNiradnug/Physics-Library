@@ -1,5 +1,7 @@
 """Dimension class and dimension constants."""
 
+from formating import superscripted
+
 
 class Dimension:
     """Physics dimension."""
@@ -7,12 +9,29 @@ class Dimension:
     def __init__(
         self,
         length: int = 0,
-        time: int = 0,
         mass: int = 0,
+        time: int = 0,
         amperage: int = 0,
         temperature: int = 0,
     ):
-        self.data = [length, time, mass, amperage, temperature]
+        self.data = [length, mass, time, amperage, temperature]
+
+    def __repr__(self) -> str:
+        string = "Dimension("
+        for i in range(5):
+            string += f"{self.data[i]}, "
+        return string[:-2] + ")"
+
+    def __str__(self) -> str:
+        name_chars = ["L", "M", "T", "I", "\u0398"]
+        string = ""
+        for i in range(5):
+            if self.data[i] == 0:
+                continue
+            string += name_chars[i]
+            if self.data[i] != 1:
+                string += superscripted(self.data[i])
+        return string if string else "scalar"
 
     def __mul__(self, other):
         return Dimension(*(self.data[i] + other.data[i] for i in range(5)))
@@ -38,7 +57,7 @@ class Dimension:
             self.data[i] *= power
         return self
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self.data == other.data
 
     def copy(self):
