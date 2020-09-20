@@ -8,6 +8,15 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     author="NamorNiradnug",
     author_email="roma937a@mail.ru",
-    description="Physics objects and constants.",
     license="MIT",
+    url="https://github.com/NamorNiradnug/physicslib",
+    description="Library with physical objects and constants.",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    python_requires=">=3.6",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )
