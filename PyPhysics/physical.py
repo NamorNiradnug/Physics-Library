@@ -1,14 +1,16 @@
-"""Main classes of PyPhysics - Physical and VectorPhysical"""
+"""Module with ScalarPhysical and VectorPhysical classes."""
 
 from types import FunctionType
 
-import unit
-from vector import Vector
+from PyPhysics import unit
+from PyPhysics.vector import Vector
 
 
 def unit_convert(func: FunctionType):
-    """Decorator for Physical's methods.
-    Converts second argument ('other') to 'other.to_unit(self.unit)'"""
+    """
+    Decorator for Physical's methods.
+    Converts second argument ('other') to 'other.to_unit(self.unit)'
+    """
     def wrapper(self, other):
         return func(self, other.to_unit(self.unit))
 
@@ -16,8 +18,10 @@ def unit_convert(func: FunctionType):
 
 
 def convert_float(func):
-    """Decorator for Physical's methods.
-    If second argument ('other') is float or integer, converts it to ScalarPhysical."""
+    """
+    Decorator for Physical's methods.
+    If second argument ('other') is float or integer, converts it to ScalarPhysical.
+    """
     def wrapper(self, other):
         if type(other) in (int, float):
             other = ScalarPhysical(other)

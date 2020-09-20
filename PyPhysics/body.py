@@ -1,12 +1,13 @@
 from typing import Optional, List
 
-import unit
+from PyPhysics import unit
 
-from physical import Physical, VectorPhysical, EARTH_GRAVITY
-from vector import Vector
+from PyPhysics.physical import Physical, VectorPhysical, EARTH_GRAVITY
+from PyPhysics.vector import Vector
 
 
 class PhysicsBody:
+    # TODO this class better
     """Simple body with Newton mechanic laws."""
 
     def __init__(

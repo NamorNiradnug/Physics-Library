@@ -1,9 +1,7 @@
 import unittest
 
-import dimension
-import unit
-import physical
-from vector import Vector
+from PyPhysics import unit, physical, dimension
+from PyPhysics.vector import Vector
 
 
 class TestCore(unittest.TestCase):
@@ -62,6 +60,30 @@ class TestCore(unittest.TestCase):
         s = v0.x_vector() * t
         self.assertEqual(v1, physical.VectorPhysical(Vector(40, -40), unit.METER / unit.SECOND))
         self.assertEqual((v0 + v1) / 2, s / t)
+
+    def test_str_and_repr(self):
+        # --Dimension--
+        self.assertEqual(repr(dimension.ACCELERATION), "Dimension(1, 0, -2, 0, 0)")
+        self.assertEqual(str(dimension.DENSITY), "L\u207B\u00B3M")
+        self.assertEqual(str(dimension.WORK / dimension.TEMPERATURE), "L\u00B2MT\u207B\u00B2\u0398\u207B\u00B9")
+        self.assertEqual(str(dimension.SCALAR), "scalar")
+        # --Unit--
+        self.assertEqual(repr(unit.NEWTON), "Unit(1, Dimension(1, 1, -2, 0, 0))")
+        self.assertEqual(str(unit.JOULE), "m\u00B2kg\u22C5s\u207B\u00B2")
+        self.assertEqual(
+            str(unit.Unit(1e-2, dimension.Dimension(2, 5, 0, 1, -7))),
+            "0.01\u22C5m\u00B2kg\u2075A\u22C5K\u207B\u2077"
+        )
+        self.assertEqual(str(unit.ONE), "scalar_unit")
+        # --Vector--
+        self.assertEqual(str(Vector(7.0, -9.8, 3)), "Vector(7.0, -9.8, 3)")
+        # --ScalarPhysical
+        self.assertEqual(str(physical.G), "ScalarPhysical(6.6743, Unit(1e-11, Dimension(3, -1, -2, 0, 0)))")
+        # --VectorPhysical--
+        self.assertEqual(
+            str(physical.EARTH_GRAVITY),
+            "VectorPhysical(Vector(0, 9.81, 0), Unit(1.0, Dimension(1, 0, -2, 0, 0)))"
+        )
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 """Unit class and unit constants."""
 
-import dimension
-from formating import superscripted
+from PyPhysics import dimension
+from PyPhysics.formating import superscripted
 
 
 class Unit:
@@ -12,22 +12,25 @@ class Unit:
         self.dimension = dim.copy()
 
     def __repr__(self):
-        return f"Unit({self.coefficient}, {repr(self.dimension)}"
+        return f"Unit({self.coefficient}, {repr(self.dimension)})"
 
     def __str__(self):
         string = ""
         if self.coefficient == -1:
             string += "-"
         elif self.coefficient != 1:
-            string += str(self.coefficient) + " "
+            string += str(self.coefficient)
+            if self.dimension != dimension.SCALAR:
+                string += "\u22C5"
         base_units = ["m", "kg", "s", "A", "K"]
         for i in range(5):
             if self.dimension.data[i] == 0:
                 continue
+            if string and string[-1].isalpha():
+                string += "\u22C5"
             string += base_units[i]
             if self.dimension.data[i] != 1:
                 string += superscripted(self.dimension.data[i])
-            string += " " if i != 4 else ""
         return string if string else "scalar_unit"
 
     def __mul__(self, other):
