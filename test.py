@@ -1,7 +1,7 @@
 import unittest
 
-from PyPhysics import unit, physical, dimension
-from PyPhysics.vector import Vector
+from physicslib import unit, physical, dimension
+from physicslib.vector import Vector
 
 
 class TestCore(unittest.TestCase):

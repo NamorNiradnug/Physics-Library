@@ -1,9 +1,9 @@
 from typing import Optional, List
 
-from PyPhysics import unit
+from physicslib import unit
 
-from PyPhysics.physical import Physical, VectorPhysical, EARTH_GRAVITY
-from PyPhysics.vector import Vector
+from physicslib.physical import Physical, VectorPhysical, EARTH_GRAVITY
+from physicslib.vector import Vector
 
 
 class PhysicsBody:

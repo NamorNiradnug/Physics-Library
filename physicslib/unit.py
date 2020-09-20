@@ -1,7 +1,7 @@
 """Unit class and unit constants."""
 
-from PyPhysics import dimension
-from PyPhysics.formating import superscripted
+from physicslib import dimension
+from physicslib.formating import superscripted
 
 
 class Unit:

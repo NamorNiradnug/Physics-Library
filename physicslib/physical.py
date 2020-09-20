@@ -2,8 +2,8 @@
 
 from types import FunctionType
 
-from PyPhysics import unit
-from PyPhysics.vector import Vector
+from physicslib import unit
+from physicslib.vector import Vector
 
 
 def unit_convert(func: FunctionType):

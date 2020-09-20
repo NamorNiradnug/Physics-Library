@@ -1,6 +1,6 @@
 """Module with Dimension class and dimension constants."""
 
-from PyPhysics.formating import superscripted
+from physicslib.formating import superscripted
 
 
 class Dimension:
