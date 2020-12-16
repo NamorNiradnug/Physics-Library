@@ -2,6 +2,9 @@
 import setuptools
 import physicslib
 
+with open("README.md") as f:
+    long_description = f.read()
+
 setuptools.setup(
     name="physicslib",
     version=physicslib.__version__,
@@ -11,7 +14,7 @@ setuptools.setup(
     license="MIT",
     url="https://github.com/NamorNiradnug/physicslib",
     description="Library with physical objects and constants.",
-    long_description=open("README.md").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires=">=3.6",
     classifiers=[
