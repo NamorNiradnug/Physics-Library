@@ -1,13 +1,12 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import setuptools
-import physicslib
 
 with open("README.md") as f:
     long_description = f.read()
 
 setuptools.setup(
     name="physicslib",
-    version=physicslib.__version__,
+    version="0.0.3a1",
     packages=setuptools.find_packages(),
     author="NamorNiradnug",
     author_email="roma937a@mail.ru",
