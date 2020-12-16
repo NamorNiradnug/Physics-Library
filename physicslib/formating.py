@@ -1,4 +1,4 @@
-"""Module with functions for pretty printing of PyPhysic objects."""
+"""Module with functions for pretty printing of physicslib objects."""
 
 
 __superscripts = {

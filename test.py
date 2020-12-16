@@ -1,12 +1,12 @@
 import unittest
 
-from physicslib import unit, physical, dimension
+from physicslib import unit, physical, dimension, constants
 from physicslib.vector import Vector
 
 
 class TestCore(unittest.TestCase):
     def test_dimension(self):
-        self.assertEqual(dimension.WORK, dimension.Dimension(2, 1, -2))
+        self.assertEqual(dimension.ENERGY, dimension.Dimension(2, 1, -2))
         self.assertEqual(dimension.PRESSURE * dimension.SQUARE, dimension.FORCE)
         self.assertEqual(dimension.ACCELERATION * dimension.TIME ** 2, dimension.LENGTH)
         self.assertEqual(dimension.MASS / dimension.VOLUME, dimension.Dimension(length=-3, mass=1))
@@ -42,18 +42,18 @@ class TestCore(unittest.TestCase):
         self.assertEqual(a1 * m1, f1)
         self.assertNotEqual(f2, f1)
         with self.assertRaises(AttributeError):
-            var = f1 + a1
+            f1 + a1
         self.assertEqual(f2 + f2, f1)
         self.assertEqual(t * v0 + (g * t ** 2) / 2, physical.Physical(-39, unit.METER))
-        g /= physical.Physical(2, unit.ONE)
-        self.assertEqual(t * v0 + (g * t ** 2) / 2.0, physical.Physical(-16.5, unit.METER))
+        g /= 2
+        self.assertEqual(t * v0 + (g * t ** 2) / 2, physical.Physical(-16.5, unit.METER))
 
     def test_vector_physical(self):
         g = physical.VectorPhysical(Vector(0, -10), unit.METER / unit.SECOND ** 2)
         v0 = physical.VectorPhysical(Vector(40, 40), unit.METER / unit.SECOND)
         self.assertEqual(-v0.y(), physical.Physical(-40, unit.METER / unit.SECOND))
         self.assertEqual(g.y(), physical.Physical(-10, unit.METER / unit.SECOND ** 2))
-        t = -(v0.y() * 2) / g.y()
+        t = -v0.y() * 2 / g.y()
         self.assertEqual(t, physical.Physical(8, unit.SECOND))
         self.assertEqual(t * v0.x(), physical.Physical(320, unit.METER))
         v1 = v0 + g * t
@@ -63,12 +63,12 @@ class TestCore(unittest.TestCase):
 
     def test_str_and_repr(self):
         # --Dimension--
-        self.assertEqual(repr(dimension.ACCELERATION), "Dimension(1, 0, -2, 0, 0)")
+        self.assertEqual(repr(dimension.ACCELERATION), "Dimension(1, 0, -2, 0, 0, 0, 0)")
         self.assertEqual(str(dimension.DENSITY), "L\u207B\u00B3M")
-        self.assertEqual(str(dimension.WORK / dimension.TEMPERATURE), "L\u00B2MT\u207B\u00B2\u0398\u207B\u00B9")
+        self.assertEqual(str(dimension.ENERGY / dimension.TEMPERATURE), "L\u00B2MT\u207B\u00B2\u0398\u207B\u00B9")
         self.assertEqual(str(dimension.SCALAR), "scalar")
         # --Unit--
-        self.assertEqual(repr(unit.NEWTON), "Unit(1, Dimension(1, 1, -2, 0, 0))")
+        self.assertEqual(repr(unit.NEWTON), "Unit(1, Dimension(1, 1, -2, 0, 0, 0, 0))")
         self.assertEqual(str(unit.JOULE), "m\u00B2kg\u22C5s\u207B\u00B2")
         self.assertEqual(
             str(unit.Unit(1e-2, dimension.Dimension(2, 5, 0, 1, -7))),
@@ -78,11 +78,16 @@ class TestCore(unittest.TestCase):
         # --Vector--
         self.assertEqual(str(Vector(7.0, -9.8, 3)), "Vector(7.0, -9.8, 3)")
         # --ScalarPhysical
-        self.assertEqual(str(physical.G), "ScalarPhysical(6.6743, Unit(1e-11, Dimension(3, -1, -2, 0, 0)))")
+        self.assertEqual(
+            str(constants.GRAVITATIONAL_CONSTANT),
+            "6.674301515\u22C51e-11\u22C5m\u00B3kg\u207B\u00B9s\u207B\u00B2"
+        )
+        self.assertEqual(str(physical.Physical(9, unit.KILOGRAM)), "9\u22C5kg")
+        self.assertEqual(str(physical.Physical(80)), "80")
         # --VectorPhysical--
         self.assertEqual(
-            str(physical.EARTH_GRAVITY),
-            "VectorPhysical(Vector(0, 9.81, 0), Unit(1.0, Dimension(1, 0, -2, 0, 0)))"
+            str(physical.VectorPhysical(Vector(0, 9.81), unit.METER * unit.SECOND ** -2)),
+            "Vector(0, 9.81, 0)\u22C5m\u22C5s\u207B\u00B2"
         )
 
 

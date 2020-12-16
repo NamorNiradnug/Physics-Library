@@ -1,15 +1,15 @@
 """Module with ScalarPhysical and VectorPhysical classes."""
 
-from types import FunctionType
+from typing import Final
 
 from physicslib import unit
 from physicslib.vector import Vector
 
 
-def unit_convert(func: FunctionType):
+def unit_convert(func):
     """
     Decorator for Physical's methods.
-    Converts second argument ('other') to 'other.to_unit(self.unit)'
+    Converts second argument (`other`) to `other.to_unit(self.unit)`.
     """
     def wrapper(self, other):
         return func(self, other.to_unit(self.unit))
@@ -20,10 +20,10 @@ def unit_convert(func: FunctionType):
 def convert_float(func):
     """
     Decorator for Physical's methods.
-    If second argument ('other') is float or integer, converts it to ScalarPhysical.
+    Converts second argument (`other`) to ScalarPhysical.
     """
     def wrapper(self, other):
-        if type(other) in (int, float):
+        if not isinstance(other, (ScalarPhysical, VectorPhysical)):
             other = ScalarPhysical(other)
         return func(self, other)
 
@@ -39,10 +39,16 @@ class ScalarPhysical:
     def __repr__(self):
         return f"ScalarPhysical({self.value}, {repr(self.unit)})"
 
+    def __str__(self):
+        return f"{self.value}\u22C5{str(self.unit)}" if self.unit != unit.ONE else str(self.value)
+
     @convert_float
     @unit_convert
     def __add__(self, other):
         return ScalarPhysical(self.value + other.value, self.unit)
+
+    def __radd__(self, other):
+        return self + other
 
     @convert_float
     @unit_convert
@@ -52,18 +58,17 @@ class ScalarPhysical:
 
     @convert_float
     def __mul__(self, other):
-        if type(other) == VectorPhysical:
+        if isinstance(other, VectorPhysical):
             return other * self
         return ScalarPhysical(self.value * other.value, self.unit * other.unit)
+
+    def __rmul__(self, other):
+        return self * other
 
     @convert_float
     def __imul__(self, other):
         self.value *= other.value
         self.unit *= other.unit
-
-    @convert_float
-    def __rmul__(self, other):
-        return self * other
 
     def __neg__(self):
         return ScalarPhysical(-self.value, self.unit)
@@ -72,6 +77,9 @@ class ScalarPhysical:
     @unit_convert
     def __sub__(self, other):
         return ScalarPhysical(self.value - other.value, self.unit)
+
+    def __rsub__(self, other):
+        return -self + other
 
     @convert_float
     @unit_convert
@@ -82,6 +90,10 @@ class ScalarPhysical:
     @convert_float
     def __truediv__(self, other):
         return ScalarPhysical(self.value / other.value, self.unit / other.unit)
+
+    @convert_float
+    def __rtruediv__(self, other):
+        return other / self
 
     @convert_float
     def __itruediv__(self, other):
@@ -104,7 +116,7 @@ class ScalarPhysical:
     def to_unit(self, unit_: unit.Unit):
         """Equal physical quantity with new unit."""
         if self.unit.dimension != unit_.dimension:
-            raise AttributeError("Bad unit dimension.")
+            raise AttributeError(f"Bad unit dimension: expected {repr(self.unit.dimension)} but got {repr(unit_)}.")
         return ScalarPhysical(self.value * self.unit.coefficient / unit_.coefficient, unit_)
 
     def copy(self):
@@ -119,6 +131,9 @@ class VectorPhysical:
 
     def __repr__(self):
         return f"VectorPhysical({self.value}, {repr(self.unit)})"
+
+    def __str__(self):
+        return f"{self.value}\u22C5{str(self.unit)}" if self.unit != unit.ONE else str(self.value)
 
     @unit_convert
     def __add__(self, other):
@@ -139,7 +154,6 @@ class VectorPhysical:
         self.unit *= other.unit
         return self
 
-    @convert_float
     def __rmul__(self, other: ScalarPhysical):
         return self * other
 
@@ -199,10 +213,3 @@ class VectorPhysical:
 
 
 Physical = ScalarPhysical
-
-
-# constants
-G = Physical(6.6743, unit.Unit(1e-11) * unit.METER ** 3 * unit.KILOGRAM ** -1 * unit.SECOND ** -2)
-"""Gravity constant."""
-EARTH_GRAVITY = VectorPhysical(Vector(0, 9.81), unit.METER * unit.SECOND ** -2)
-"""Earth gravity acceleration."""
