@@ -1,9 +1,7 @@
 """Module with ScalarPhysical and VectorPhysical classes."""
 
-from typing import Final
-
-from physicslib import unit
-from physicslib.vector import Vector
+from . import unit
+from .vector import Vector
 
 
 def unit_convert(func):
@@ -112,6 +110,9 @@ class ScalarPhysical:
     @unit_convert
     def __eq__(self, other):
         return self.value == other.value
+
+    def __round__(self, n=None):
+        return Physical(round(self.value, n), self.unit)
 
     def to_unit(self, unit_: unit.Unit):
         """Equal physical quantity with new unit."""

@@ -1,12 +1,13 @@
 #!/usr/bin/python
 import setuptools
+from physicslib import __version__
 
 with open("README.md") as f:
     long_description = f.read()
 
 setuptools.setup(
     name="physicslib",
-    version="0.0.3a1",
+    version=__version__,
     packages=setuptools.find_packages(),
     author="NamorNiradnug",
     author_email="roma937a@mail.ru",
@@ -15,7 +16,7 @@ setuptools.setup(
     description="Library with physical objects and constants.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

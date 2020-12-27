@@ -1,7 +1,8 @@
 import unittest
 
+#from . import physicslib
+from physicslib import __version__
 from physicslib import *
-from physicslib import constants
 
 
 class TestCore(unittest.TestCase):
@@ -30,7 +31,7 @@ class TestCore(unittest.TestCase):
         self.assertEqual(a.cross(c), 0.5)
         self.assertEqual(a.angle_cos(Vector(0, -1)), -1 / 2 ** 0.5)
 
-    def test_physical(self):
+    def test_physical_1(self):
         a1 = Physical(2, unit.METER / unit.SECOND ** 2)
         g = Physical(-10, unit.METER / unit.SECOND ** 2)
         v0 = Physical(2, unit.METER / unit.SECOND)
@@ -47,6 +48,17 @@ class TestCore(unittest.TestCase):
         self.assertEqual(t * v0 + (g * t ** 2) / 2, Physical(-39, unit.METER))
         g /= 2
         self.assertEqual(t * v0 + (g * t ** 2) / 2, Physical(-16.5, unit.METER))
+
+    def test_physical_2(self):
+        # simple calculating of air mass in some room
+        molar_mass = Physical(29, unit.GRAM / unit.MOLE)
+        temp = Physical(300, unit.KELVIN)
+        pressure = Physical(1e5, unit.PASCAL)
+        room_volume = Physical(20, unit.METER ** 2) * Physical(3, unit.METER)
+        self.assertEqual(
+            round(room_volume * pressure * molar_mass / (temp * constants.GAS_CONSTANT)),
+            Physical(69.758, unit.KILOGRAM)
+        )
 
     def test_vector_physical(self):
         g = VectorPhysical(Vector(0, -10), unit.METER / unit.SECOND ** 2)
@@ -92,4 +104,5 @@ class TestCore(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    print(f"Testing physicslib v{__version__}")
     unittest.main()

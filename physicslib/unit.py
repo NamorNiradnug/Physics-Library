@@ -1,9 +1,9 @@
 """Unit class and unit constants."""
 
-from typing import Final, Union
+from typing import Final
 
-from physicslib import dimension
-from physicslib.formating import superscripted
+from . import dimension
+from .formating import superscripted
 
 
 def convert_float(func):
@@ -113,8 +113,13 @@ VOLT: Final = Unit(1, dimension.ELECTRIC_POTENTIAL)
 OHM: Final = Unit(1, dimension.ELECTRIC_RESISTANCE)
 FARAD: Final = Unit(1, dimension.CAPACITANCE)
 
-# non-SI units
+# other units
+KILOMETER: Final = 1e3 * METER
+DECIMETER: Final = 1e-1 * METER
+CENTIMETER: Final = 1e-2 * METER
+MILLIMETER: Final = 1e-3 * METER
 MINUTE: Final = 60 * SECOND
 HOUR: Final = 60 * MINUTE
+MILLISECOND: Final = 1e-3 * SECOND
 GRAM: Final = 0.001 * KILOGRAM
 TON: Final = 1000 * KILOGRAM

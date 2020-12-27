@@ -2,7 +2,7 @@
 
 from typing import Final
 
-from physicslib.formating import superscripted
+from .formating import superscripted
 
 
 class Dimension:

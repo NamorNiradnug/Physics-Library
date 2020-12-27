@@ -5,8 +5,8 @@ Also see https://en.wikipedia.org/wiki/List_of_physical_constants for list of th
 
 from typing import Final
 
-from physicslib import unit
-from physicslib.physical import Physical, Vector, VectorPhysical
+from . import unit
+from .physical import Physical
 
 LIGHT_SPEED: Final = Physical(299_792_458, unit.METER / unit.SECOND)
 """Speed of light in vacuum (`c`). See https://en.wikipadia.org/wiki/Speed_of_light for information."""
