@@ -1,7 +1,5 @@
 import unittest
 
-#from . import physicslib
-from physicslib import __version__
 from physicslib import *
 
 
@@ -30,6 +28,8 @@ class TestCore(unittest.TestCase):
         self.assertEqual(a.length(), 2 ** 0.5)
         self.assertEqual(a.cross(c), 0.5)
         self.assertEqual(a.angle_cos(Vector(0, -1)), -1 / 2 ** 0.5)
+        a -= Vector(9, -8, 1)
+        self.assertEqual(a, Vector(-8, 9, -1))
 
     def test_physical_1(self):
         a1 = Physical(2, unit.METER / unit.SECOND ** 2)
